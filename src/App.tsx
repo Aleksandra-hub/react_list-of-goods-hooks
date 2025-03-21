@@ -2,7 +2,6 @@ import React from 'react';
 import 'bulma/css/bulma.css';
 import './App.scss';
 import { useState } from 'react';
-
 export const goodsFromServer = [
   'Dumplings',
   'Carrot',
@@ -15,7 +14,6 @@ export const goodsFromServer = [
   'Jam',
   'Garlic',
 ];
-
 type SortField = 'alphabet' | 'length' | '';
 const SORT_ALPHABETICALLY = 'alphabet';
 const SORT_BY_LENGTH = 'length';
@@ -29,21 +27,21 @@ function getSortedGoods(
 
   if (sortField) {
     sortedGoods.sort((goods1, goods2) => {
+      let comparison = 0;
+
       switch (sortField) {
         case SORT_ALPHABETICALLY:
-          return goods1.localeCompare(goods2);
-
+          comparison = goods1.localeCompare(goods2);
+          break;
         case SORT_BY_LENGTH:
-          return goods1.length - goods2.length;
-
+          comparison = goods1.length - goods2.length;
+          break;
         default:
-          return 0;
+          comparison = 0;
       }
-    });
-  }
 
-  if (reverse) {
-    sortedGoods.reverse();
+      return reverse ? -comparison : comparison;
+    });
   }
 
   return sortedGoods;
@@ -58,9 +56,7 @@ export const App: React.FC = () => {
   const [goods, setGoods] = useState(initialGoods);
   const [sortField, setSortField] = useState<SortField | ''>('');
   const [isReverse, setReverse] = useState(false);
-
   //handlers
-
   const sortAlphabetically = () => {
     const sortedGoods = getSortedGoods(goods, SORT_ALPHABETICALLY, isReverse);
 
@@ -98,7 +94,6 @@ export const App: React.FC = () => {
         >
           Sort alphabetically
         </button>
-
         <button
           type="button"
           className={`button is-success ${sortField === SORT_BY_LENGTH ? '' : 'is-light'}`}
@@ -106,7 +101,6 @@ export const App: React.FC = () => {
         >
           Sort by length
         </button>
-
         <button
           type="button"
           className={`button is-warning ${isReverse === true ? false : 'is-light'}`}
@@ -114,14 +108,12 @@ export const App: React.FC = () => {
         >
           Reverse
         </button>
-
         {(sortField || isReverse) && (
           <button type="button" className="button is-danger" onClick={reset}>
             Reset
           </button>
         )}
       </div>
-
       <ul>
         {goods.map(good => (
           <li key={good} data-cy="Good">
